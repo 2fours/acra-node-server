@@ -17,6 +17,7 @@ var SSL = "ssl";
 var SUBJECT = "subject";
 var FROM = "from";
 var TO = "to";
+var DATE_FORMAT = "date_format";
 
 console.log("------------------------".red);
 console.log("ACRA SERVER LOG 0.0.1".bold.red);
