@@ -2,9 +2,23 @@ var express = require('express');
 var colors = require('colors');
 var prop = require('./properties.js');
 var logger = require('./logger');
+var https = require('https');
+var fs = require('fs');
 
 
 var app = express();
+
+ssloptions = {
+  key: fs.readFileSync("ssl/surespot.key"),
+  cert: fs.readFileSync("ssl/surespot.crt")
+}
+
+peerCertPath = "ssl/PositiveSSLCA2.crt";
+if (fs.existsSync(peerCertPath)) {
+  ssloptions["ca"] = fs.readFileSync(peerCertPath);
+}
+
+
 
 app.configure(function () {
 	app.use(express.logger('default'));  /* 'default', 'short', 'tiny', 'dev' */
@@ -47,6 +61,9 @@ app.get('/logs/:appid/:id/delete', basicAuth, logger.deleteLog);
 app.get('/logout', logger.logout);
   
 console.log("------------------".yellow);
-app.listen(prop.portWeb);
+
+var server = https.createServer(ssloptions, app);
+server.listen(prop.portWeb);
+
 console.log('Listening on port '.yellow+prop.portWeb.red);
 
